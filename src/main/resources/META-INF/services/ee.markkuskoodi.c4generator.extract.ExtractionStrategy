@@ -1,0 +1,3 @@
+ee.markkuskoodi.c4generator.extract.strategies.GradleUnitStrategy
+ee.markkuskoodi.c4generator.extract.strategies.MavenUnitStrategy
+ee.markkuskoodi.c4generator.extract.strategies.SpringDataStoreStrategy

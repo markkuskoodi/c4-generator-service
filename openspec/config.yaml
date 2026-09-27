@@ -1,0 +1,49 @@
+schema: spec-driven
+
+context: |
+  Master's thesis project: a tool that automatically generates C4 architecture models
+  (system context, container, component, deployment diagrams) from a software system's
+  source code, configuration, and deployment definitions.
+
+  Repository layout:
+  - This root folder holds the thesis planning documents and OpenSpec.
+  - All application code lives in `c4-generator-service/` (its own git repository).
+    Never place implementation code outside it.
+
+  Authoritative documents (read before planning any change):
+  - `objectives-and-requirements.md` — objectives O1–O5, functional requirements
+    (FR-IN/UN/RE/CO/HK/DE/OUT), NFRs, assumptions, constraints, out of scope.
+  - `milestones.md` — iterative milestones M1–M7; changes should map to a milestone
+    and reference the requirement IDs they implement.
+
+  Key architectural decisions already made:
+  - The tool is a CLI (NFR-9), written in Java, intended to run in CI after the
+    analysed project has been built (compiled bytecode is available).
+  - Static analysis first: the tool never executes the analysed system; runtime
+    evidence may only be supplied as input.
+  - Canonical output is the tool's own model serialization (model.json): elements,
+    relationships (including explicitly unresolved ones), evidence references back to
+    source artifacts, resolved commit SHAs, stable element identifiers. It must be
+    VCS-friendly and deterministic.
+  - Rendering is delegated to existing C4 tooling via pluggable exporters. Primary
+    export target: Structurizr DSL (Structurizr Lite for viewing, structurizr-cli for
+    static exports). Backup plan: LikeC4.
+  - Extraction logic is organised as pluggable strategies (NFR-5): first strategies
+    target Maven/Gradle build files and the Spring framework.
+  - Analysed systems: Java/Spring server-side; client-side apps (Angular/React) are
+    identified as containers with relationships, but get no component-level analysis.
+
+rules:
+  proposal:
+    - Reference the milestone (M1–M7) and requirement IDs (FR-*/NFR-*) the change serves
+    - Include a "Non-goals" section; respect the out-of-scope list in objectives-and-requirements.md
+  specs:
+    - Use the requirement IDs from objectives-and-requirements.md when a spec refines one
+  tasks:
+    - Every task that produces code targets the c4-generator-service repository
+
+operations:
+  apply:
+    guidance:
+      - Implementation happens inside c4-generator-service/; keep the thesis root free of code
+      - Preserve determinism (NFR-2) — no timestamps or random values in generated models
